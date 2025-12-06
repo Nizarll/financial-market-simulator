@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "abseil",
+    "nlohmann-json"
+  ]
+}
