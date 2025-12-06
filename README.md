@@ -31,6 +31,7 @@ You can also build it from source by looking at the qt5 documentation.
 
 1. Clone the repository
 2. Enter the base directory
+3. Create a build directory
 ```bash
 mkdir -p build
 ```
