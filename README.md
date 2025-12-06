@@ -1,4 +1,4 @@
-# Stock Price Value Simulation
+# Stock Valuation Simulator
 
 This project serves as a tool for visualization and Simulation
 of stock price valuation using different stochastic processes like geometric brownian motion, black scholes and monte carlo.
