@@ -14,18 +14,10 @@ find_package(absl REQUIRED)
 
 add_executable(app
   src/main.cpp
-  src/graph.cpp
-  src/header.cpp
-  src/parameters_panel.cpp
-  src/stochastic_process.cpp
-  libs/graph.hpp
-  libs/header.hpp
-  libs/parameters_panel.hpp
-  libs/shadcn_theme.hpp
+  src/widget.cpp
 )
 
 target_compile_options(app PUBLIC -g3)
-
 target_include_directories(app PUBLIC libs/)
 target_link_libraries(app
   Qt5::Core

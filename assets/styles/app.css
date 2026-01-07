@@ -1,0 +1,1907 @@
+/* shadcn-qt Theme */
+
+* { /*Dark*/
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /*Dark*/
+    font-size: 14px; /*Dark*/
+} /*Dark*/
+
+* { /*Light*/
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /*Light*/
+    font-size: 14px; /*Light*/
+} /*Light*/
+
+QWidget { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QWidget { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QMainWindow { /*Dark*/
+    background-color: #09090b; /*Dark*/
+} /*Dark*/
+
+QMainWindow { /*Light*/
+    background-color: #ffffff; /*Light*/
+} /*Light*/
+
+QPushButton { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    color: #18181b; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 16px; /*Dark*/
+    min-height: 20px; /*Dark*/
+    font-weight: 500; /*Dark*/
+} /*Dark*/
+
+QPushButton { /*Light*/
+    background-color: #09090b; /*Light*/
+    color: #fafafa; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 16px; /*Light*/
+    min-height: 20px; /*Light*/
+    font-weight: 500; /*Light*/
+} /*Light*/
+
+QPushButton:hover { /*Dark*/
+    background-color: #e4e4e7; /*Dark*/
+} /*Dark*/
+
+QPushButton:hover { /*Light*/
+    background-color: #18181b; /*Light*/
+} /*Light*/
+
+QPushButton:pressed { /*Dark*/
+    background-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QPushButton:pressed { /*Light*/
+    background-color: #27272a; /*Light*/
+} /*Light*/
+
+QPushButton:disabled { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    color: #71717a; /*Dark*/
+    border-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QPushButton:disabled { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #a1a1aa; /*Light*/
+    border-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QPushButton:focus { /*Dark*/
+    padding: 0px; /*Dark*/
+    min-height: 20px; /*Dark*/
+    font-weight: 500; /*Dark*/
+    outline: 4px solid #d4d4d8; /*Dark*/
+    outline-offset: 2px; /*Dark*/
+} /*Dark*/
+
+QPushButton:focus { /*Light*/
+    padding: 0px; /*Light*/
+    min-height: 20px; /*Light*/
+    font-weight: 500; /*Light*/
+    outline: 4px solid #3f3f46; /*Light*/
+    outline-offset: 2px; /*Light*/
+} /*Light*/
+
+QPushButton[variant="primary"] { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    color: #18181b; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="primary"] { /*Light*/
+    background-color: #09090b; /*Light*/
+    color: #fafafa; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QPushButton[variant="primary"]:hover { /*Dark*/
+    background-color: #e4e4e7; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="primary"]:hover { /*Light*/
+    background-color: #18181b; /*Light*/
+} /*Light*/
+
+QPushButton[variant="primary"]:pressed { /*Dark*/
+    background-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="primary"]:pressed { /*Light*/
+    background-color: #27272a; /*Light*/
+} /*Light*/
+
+QPushButton[variant="destructive"] { /*Dark*/
+    background-color: #7f1d1d; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="destructive"] { /*Light*/
+    background-color: #ef4444; /*Light*/
+    color: #fafafa; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QPushButton[variant="destructive"]:hover { /*Dark*/
+    background-color: #991b1b; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="destructive"]:hover { /*Light*/
+    background-color: #dc2626; /*Light*/
+} /*Light*/
+
+QPushButton[variant="destructive"]:pressed { /*Dark*/
+    background-color: #7f1d1d; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="destructive"]:pressed { /*Light*/
+    background-color: #b91c1c; /*Light*/
+} /*Light*/
+
+QPushButton[variant="outline"] { /*Dark*/
+    background-color: transparent; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="outline"] { /*Light*/
+    background-color: transparent; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+} /*Light*/
+
+QPushButton[variant="outline"]:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="outline"]:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QPushButton[variant="outline"]:pressed { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="outline"]:pressed { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QPushButton[variant="ghost"] { /*Dark*/
+    background-color: transparent; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="ghost"] { /*Light*/
+    background-color: transparent; /*Light*/
+    color: #09090b; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QPushButton[variant="ghost"]:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="ghost"]:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QPushButton[variant="ghost"]:pressed { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="ghost"]:pressed { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QPushButton[variant="secondary"] { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="secondary"] { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #09090b; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QPushButton[variant="secondary"]:hover { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QPushButton[variant="secondary"]:hover { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QLineEdit { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QLineEdit { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+    selection-background-color: #d4d4d8; /*Light*/
+    selection-color: #09090b; /*Light*/
+} /*Light*/
+
+QLineEdit:hover { /*Dark*/
+    border-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QLineEdit:hover { /*Light*/
+    border-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QLineEdit:focus { /*Dark*/
+    border: 1px solid #d4d4d8; /*Dark*/
+    outline: none; /*Dark*/
+} /*Dark*/
+
+QLineEdit:focus { /*Light*/
+    border: 1px solid #3f3f46; /*Light*/
+    outline: none; /*Light*/
+} /*Light*/
+
+QLineEdit:disabled { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #71717a; /*Dark*/
+    border-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QLineEdit:disabled { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #a1a1aa; /*Light*/
+    border-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QLineEdit[readOnly="true"] { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #a1a1aa; /*Dark*/
+} /*Dark*/
+
+QLineEdit[readOnly="true"] { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #71717a; /*Light*/
+} /*Light*/
+
+QTextEdit, QPlainTextEdit { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QTextEdit, QPlainTextEdit { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+    selection-background-color: #d4d4d8; /*Light*/
+    selection-color: #09090b; /*Light*/
+} /*Light*/
+
+QTextEdit:focus, QPlainTextEdit:focus { /*Dark*/
+    border: 1px solid #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QTextEdit:focus, QPlainTextEdit:focus { /*Light*/
+    border: 1px solid #3f3f46; /*Light*/
+} /*Light*/
+
+QTextEdit:disabled, QPlainTextEdit:disabled { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QTextEdit:disabled, QPlainTextEdit:disabled { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QComboBox { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    min-height: 20px; /*Dark*/
+} /*Dark*/
+
+QComboBox { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+    min-height: 20px; /*Light*/
+} /*Light*/
+
+QComboBox:hover { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    border-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QComboBox:hover { /*Light*/
+    background-color: #f9fafb; /*Light*/
+    border-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QComboBox:focus { /*Dark*/
+    border-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QComboBox:focus { /*Light*/
+    border-color: #3f3f46; /*Light*/
+} /*Light*/
+
+QComboBox:disabled { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QComboBox:disabled { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QComboBox::drop-down { /*Dark*/
+    border: none; /*Dark*/
+    width: 30px; /*Dark*/
+} /*Dark*/
+
+QComboBox::drop-down { /*Light*/
+    border: none; /*Light*/
+    width: 30px; /*Light*/
+} /*Light*/
+
+QComboBox::down-arrow { /*Dark*/
+    image: url(./assets/icons/plus-light.svg); /*Dark*/
+    margin-right: 8px; /*Dark*/
+} /*Dark*/
+
+QComboBox::down-arrow { /*Light*/
+    image: url(./assets/icons/plus.svg); /*Light*/
+    margin-right: 8px; /*Light*/
+} /*Light*/
+
+QComboBox::down-arrow:disabled { /*Dark*/
+    border-top-color: #71717a; /*Dark*/
+} /*Dark*/
+
+QComboBox::down-arrow:disabled { /*Light*/
+    border-top-color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QComboBox QAbstractItemView { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 4px; /*Dark*/
+    outline: none; /*Dark*/
+    selection-background-color: #27272a; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QComboBox QAbstractItemView { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 4px; /*Light*/
+    outline: none; /*Light*/
+    selection-background-color: #f4f4f5; /*Light*/
+    selection-color: #09090b; /*Light*/
+} /*Light*/
+
+QComboBox QAbstractItemView::item { /*Dark*/
+    padding: 6px 12px; /*Dark*/
+    border-radius: 4px; /*Dark*/
+    min-height: 20px; /*Dark*/
+} /*Dark*/
+
+QComboBox QAbstractItemView::item { /*Light*/
+    padding: 6px 12px; /*Light*/
+    border-radius: 4px; /*Light*/
+    min-height: 20px; /*Light*/
+} /*Light*/
+
+QComboBox QAbstractItemView::item:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QComboBox QAbstractItemView::item:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QComboBox QAbstractItemView::item:selected { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QComboBox QAbstractItemView::item:selected { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QSpinBox, QDoubleSpinBox { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+} /*Dark*/
+
+QSpinBox, QDoubleSpinBox { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+} /*Light*/
+
+QSpinBox:hover, QDoubleSpinBox:hover { /*Dark*/
+    border-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QSpinBox:hover, QDoubleSpinBox:hover { /*Light*/
+    border-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QSpinBox:focus, QDoubleSpinBox:focus { /*Dark*/
+    border-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QSpinBox:focus, QDoubleSpinBox:focus { /*Light*/
+    border-color: #3f3f46; /*Light*/
+} /*Light*/
+
+QSpinBox::up-button, QDoubleSpinBox::up-button { /*Dark*/
+    background-color: transparent; /*Dark*/
+    border: none; /*Dark*/
+    width: 20px; /*Dark*/
+    subcontrol-position: right; /*Dark*/
+} /*Dark*/
+
+QSpinBox::up-button, QDoubleSpinBox::up-button { /*Light*/
+    background-color: transparent; /*Light*/
+    border: none; /*Light*/
+    width: 20px; /*Light*/
+    subcontrol-position: right; /*Light*/
+} /*Light*/
+
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QSpinBox::down-button, QDoubleSpinBox::down-button { /*Dark*/
+    background-color: transparent; /*Dark*/
+    border: none; /*Dark*/
+    width: 20px; /*Dark*/
+    subcontrol-position: left; /*Dark*/
+} /*Dark*/
+
+QSpinBox::down-button, QDoubleSpinBox::down-button { /*Light*/
+    background-color: transparent; /*Light*/
+    border: none; /*Light*/
+    width: 20px; /*Light*/
+    subcontrol-position: left; /*Light*/
+} /*Light*/
+
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow { /*Dark*/
+    image: url(./assets/icons/arrow-right-light.svg); /*Dark*/
+    width: 12px; /*Dark*/
+    height: 12px; /*Dark*/
+} /*Dark*/
+
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow { /*Light*/
+    image: url(./assets/icons/arrow-right.svg); /*Light*/
+    width: 12px; /*Light*/
+    height: 12px; /*Light*/
+} /*Light*/
+
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow { /*Dark*/
+    image: url(./assets/icons/arrow-left-light.svg); /*Dark*/
+    width: 12px; /*Dark*/
+    height: 12px; /*Dark*/
+} /*Dark*/
+
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow { /*Light*/
+    image: url(./assets/icons/arrow-left.svg); /*Light*/
+    width: 12px; /*Light*/
+    height: 12px; /*Light*/
+} /*Light*/
+
+QCheckBox { /*Dark*/
+    spacing: 8px; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QCheckBox { /*Light*/
+    spacing: 8px; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QCheckBox::indicator { /*Dark*/
+    width: 18px; /*Dark*/
+    height: 18px; /*Dark*/
+    border: 2px solid #27272a; /*Dark*/
+    border-radius: 4px; /*Dark*/
+    background-color: #09090b; /*Dark*/
+} /*Dark*/
+
+QCheckBox::indicator { /*Light*/
+    width: 18px; /*Light*/
+    height: 18px; /*Light*/
+    border: 2px solid #e4e4e7; /*Light*/
+    border-radius: 4px; /*Light*/
+    background-color: #ffffff; /*Light*/
+} /*Light*/
+
+QCheckBox::indicator:hover { /*Dark*/
+    border-color: #fafafa; /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QCheckBox::indicator:hover { /*Light*/
+    border-color: #09090b; /*Light*/
+    background-color: #f9fafb; /*Light*/
+} /*Light*/
+
+QCheckBox::indicator:checked { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border-color: #fafafa; /*Dark*/
+    image: none; /*Dark*/
+} /*Dark*/
+
+QCheckBox::indicator:checked { /*Light*/
+    background-color: #09090b; /*Light*/
+    border-color: #09090b; /*Light*/
+    image: none; /*Light*/
+} /*Light*/
+
+QCheckBox::indicator:checked:hover { /*Dark*/
+    background-color: #e4e4e7; /*Dark*/
+    border-color: #e4e4e7; /*Dark*/
+} /*Dark*/
+
+QCheckBox::indicator:checked:hover { /*Light*/
+    background-color: #18181b; /*Light*/
+    border-color: #18181b; /*Light*/
+} /*Light*/
+
+QCheckBox::indicator:disabled { /*Dark*/
+    border-color: #27272a; /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QCheckBox::indicator:disabled { /*Light*/
+    border-color: #e4e4e7; /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QCheckBox:disabled { /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QCheckBox:disabled { /*Light*/
+    color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QRadioButton { /*Dark*/
+    spacing: 8px; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QRadioButton { /*Light*/
+    spacing: 8px; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QRadioButton::indicator { /*Dark*/
+    width: 18px; /*Dark*/
+    height: 18px; /*Dark*/
+    border: 2px solid #27272a; /*Dark*/
+    border-radius: 10px; /*Dark*/
+    background-color: #09090b; /*Dark*/
+} /*Dark*/
+
+QRadioButton::indicator { /*Light*/
+    width: 18px; /*Light*/
+    height: 18px; /*Light*/
+    border: 2px solid #e4e4e7; /*Light*/
+    border-radius: 10px; /*Light*/
+    background-color: #ffffff; /*Light*/
+} /*Light*/
+
+QRadioButton::indicator:hover { /*Dark*/
+    border-color: #fafafa; /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QRadioButton::indicator:hover { /*Light*/
+    border-color: #09090b; /*Light*/
+    background-color: #f9fafb; /*Light*/
+} /*Light*/
+
+QRadioButton::indicator:checked { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border-color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QRadioButton::indicator:checked { /*Light*/
+    background-color: #09090b; /*Light*/
+    border-color: #09090b; /*Light*/
+} /*Light*/
+
+QRadioButton::indicator:checked:hover { /*Dark*/
+    background-color: #e4e4e7; /*Dark*/
+    border-color: #e4e4e7; /*Dark*/
+} /*Dark*/
+
+QRadioButton::indicator:checked:hover { /*Light*/
+    background-color: #18181b; /*Light*/
+    border-color: #18181b; /*Light*/
+} /*Light*/
+
+QRadioButton::indicator:disabled { /*Dark*/
+    border-color: #27272a; /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QRadioButton::indicator:disabled { /*Light*/
+    border-color: #e4e4e7; /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QRadioButton:disabled { /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QRadioButton:disabled { /*Light*/
+    color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QSlider::groove:horizontal { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    height: 6px; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::groove:horizontal { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    height: 6px; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QSlider::groove:vertical { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    width: 6px; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::groove:vertical { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    width: 6px; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QSlider::handle:horizontal { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border: 2px solid #fafafa; /*Dark*/
+    width: 18px; /*Dark*/
+    height: 18px; /*Dark*/
+    margin: -7px 0; /*Dark*/
+    border-radius: 9px; /*Dark*/
+} /*Dark*/
+
+QSlider::handle:horizontal { /*Light*/
+    background-color: #09090b; /*Light*/
+    border: 2px solid #09090b; /*Light*/
+    width: 18px; /*Light*/
+    height: 18px; /*Light*/
+    margin: -7px 0; /*Light*/
+    border-radius: 9px; /*Light*/
+} /*Light*/
+
+QSlider::handle:vertical { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border: 2px solid #fafafa; /*Dark*/
+    width: 18px; /*Dark*/
+    height: 18px; /*Dark*/
+    margin: 0 -7px; /*Dark*/
+    border-radius: 9px; /*Dark*/
+} /*Dark*/
+
+QSlider::handle:vertical { /*Light*/
+    background-color: #09090b; /*Light*/
+    border: 2px solid #09090b; /*Light*/
+    width: 18px; /*Light*/
+    height: 18px; /*Light*/
+    margin: 0 -7px; /*Light*/
+    border-radius: 9px; /*Light*/
+} /*Light*/
+
+QSlider::handle:horizontal:hover, /*Dark*/
+QSlider::handle:vertical:hover { /*Dark*/
+    background-color: #e4e4e7; /*Dark*/
+    border-color: #e4e4e7; /*Dark*/
+} /*Dark*/
+
+QSlider::handle:horizontal:hover, /*Light*/
+QSlider::handle:vertical:hover { /*Light*/
+    background-color: #18181b; /*Light*/
+    border-color: #18181b; /*Light*/
+} /*Light*/
+
+QSlider::handle:horizontal:pressed, /*Dark*/
+QSlider::handle:vertical:pressed { /*Dark*/
+    background-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QSlider::handle:horizontal:pressed, /*Light*/
+QSlider::handle:vertical:pressed { /*Light*/
+    background-color: #27272a; /*Light*/
+} /*Light*/
+
+QSlider::sub-page:horizontal { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::sub-page:horizontal { /*Light*/
+    background-color: #09090b; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QSlider::add-page:horizontal { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::add-page:horizontal { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QSlider::sub-page:vertical { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::sub-page:vertical { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QSlider::add-page:vertical { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border-radius: 3px; /*Dark*/
+} /*Dark*/
+
+QSlider::add-page:vertical { /*Light*/
+    background-color: #09090b; /*Light*/
+    border-radius: 3px; /*Light*/
+} /*Light*/
+
+QProgressBar { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    border: none; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    height: 10px; /*Dark*/
+    text-align: center; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QProgressBar { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    border: none; /*Light*/
+    border-radius: 6px; /*Light*/
+    height: 10px; /*Light*/
+    text-align: center; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QProgressBar::chunk { /*Dark*/
+    background-color: #fafafa; /*Dark*/
+    border-radius: 6px; /*Dark*/
+} /*Dark*/
+
+QProgressBar::chunk { /*Light*/
+    background-color: #09090b; /*Light*/
+    border-radius: 6px; /*Light*/
+} /*Light*/
+
+QTabWidget::pane { /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    background-color: #09090b; /*Dark*/
+    top: -1px; /*Dark*/
+} /*Dark*/
+
+QTabWidget::pane { /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    background-color: #ffffff; /*Light*/
+    top: -1px; /*Light*/
+} /*Light*/
+
+QTabBar { /*Dark*/
+    background-color: transparent; /*Dark*/
+} /*Dark*/
+
+QTabBar { /*Light*/
+    background-color: transparent; /*Light*/
+} /*Light*/
+
+QTabBar::tab { /*Dark*/
+    background-color: transparent; /*Dark*/
+    color: #71717a; /*Dark*/
+    border: none; /*Dark*/
+    padding: 10px 20px; /*Dark*/
+    margin-right: 2px; /*Dark*/
+    font-weight: 500; /*Dark*/
+} /*Dark*/
+
+QTabBar::tab { /*Light*/
+    background-color: transparent; /*Light*/
+    color: #71717a; /*Light*/
+    border: none; /*Light*/
+    padding: 10px 20px; /*Light*/
+    margin-right: 2px; /*Light*/
+    font-weight: 500; /*Light*/
+} /*Light*/
+
+QTabBar::tab:hover { /*Dark*/
+    color: #fafafa; /*Dark*/
+    background-color: #18181b; /*Dark*/
+    border-radius: 6px; /*Dark*/
+} /*Dark*/
+
+QTabBar::tab:hover { /*Light*/
+    color: #09090b; /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    border-radius: 6px; /*Light*/
+} /*Light*/
+
+QTabBar::tab:selected { /*Dark*/
+    color: #fafafa; /*Dark*/
+    background-color: #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+} /*Dark*/
+
+QTabBar::tab:selected { /*Light*/
+    color: #09090b; /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+} /*Light*/
+
+QTabBar::tab:!selected { /*Dark*/
+    margin-top: 2px; /*Dark*/
+} /*Dark*/
+
+QTabBar::tab:!selected { /*Light*/
+    margin-top: 2px; /*Light*/
+} /*Light*/
+
+QTableView, QTableWidget { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    alternate-background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    gridline-color: #27272a; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QTableView, QTableWidget { /*Light*/
+    background-color: #ffffff; /*Light*/
+    alternate-background-color: #f9fafb; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    gridline-color: #e4e4e7; /*Light*/
+    selection-background-color: #e4e4e7; /*Light*/
+    selection-color: #09090b; /*Light*/
+} /*Light*/
+
+QTableView::item, QTableWidget::item { /*Dark*/
+    padding: 8px; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QTableView::item, QTableWidget::item { /*Light*/
+    padding: 8px; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QTableView::item:hover, QTableWidget::item:hover { /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QTableView::item:hover, QTableWidget::item:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QTableView::item:selected, QTableWidget::item:selected { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QTableView::item:selected, QTableWidget::item:selected { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QHeaderView { /*Dark*/
+    background-color: transparent; /*Dark*/
+} /*Dark*/
+
+QHeaderView { /*Light*/
+    background-color: transparent; /*Light*/
+} /*Light*/
+
+QHeaderView::section { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: none; /*Dark*/
+    border-right: 1px solid #27272a; /*Dark*/
+    border-bottom: 1px solid #27272a; /*Dark*/
+    padding: 10px 8px; /*Dark*/
+    font-weight: 600; /*Dark*/
+} /*Dark*/
+
+QHeaderView::section { /*Light*/
+    background-color: #f9fafb; /*Light*/
+    color: #09090b; /*Light*/
+    border: none; /*Light*/
+    border-right: 1px solid #e4e4e7; /*Light*/
+    border-bottom: 1px solid #e4e4e7; /*Light*/
+    padding: 10px 8px; /*Light*/
+    font-weight: 600; /*Light*/
+} /*Light*/
+
+QHeaderView::section:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QHeaderView::section:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QHeaderView::section:first { /*Dark*/
+    border-top-left-radius: 6px; /*Dark*/
+} /*Dark*/
+
+QHeaderView::section:first { /*Light*/
+    border-top-left-radius: 6px; /*Light*/
+} /*Light*/
+
+QHeaderView::section:last { /*Dark*/
+    border-top-right-radius: 6px; /*Dark*/
+    border-right: none; /*Dark*/
+} /*Dark*/
+
+QHeaderView::section:last { /*Light*/
+    border-top-right-radius: 6px; /*Light*/
+    border-right: none; /*Light*/
+} /*Light*/
+
+QListView, QListWidget { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+    outline: none; /*Dark*/
+} /*Dark*/
+
+QListView, QListWidget { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    selection-background-color: #e4e4e7; /*Light*/
+    selection-color: #09090b; /*Light*/
+    outline: none; /*Light*/
+} /*Light*/
+
+QListView::item, QListWidget::item { /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    border: none; /*Dark*/
+    border-radius: 4px; /*Dark*/
+} /*Dark*/
+
+QListView::item, QListWidget::item { /*Light*/
+    padding: 8px 12px; /*Light*/
+    border: none; /*Light*/
+    border-radius: 4px; /*Light*/
+} /*Light*/
+
+QListView::item:hover, QListWidget::item:hover { /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QListView::item:hover, QListWidget::item:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QListView::item:selected, QListWidget::item:selected { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QListView::item:selected, QListWidget::item:selected { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QTreeView, QTreeWidget { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    alternate-background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+    selection-color: #fafafa; /*Dark*/
+    outline: none; /*Dark*/
+} /*Dark*/
+
+QTreeView, QTreeWidget { /*Light*/
+    background-color: #ffffff; /*Light*/
+    alternate-background-color: #f9fafb; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    selection-background-color: #e4e4e7; /*Light*/
+    selection-color: #09090b; /*Light*/
+    outline: none; /*Light*/
+} /*Light*/
+
+QTreeView::item, QTreeWidget::item { /*Dark*/
+    padding: 6px; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QTreeView::item, QTreeWidget::item { /*Light*/
+    padding: 6px; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QTreeView::item:hover, QTreeWidget::item:hover { /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QTreeView::item:hover, QTreeWidget::item:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QTreeView::item:selected, QTreeWidget::item:selected { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QTreeView::item:selected, QTreeWidget::item:selected { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QTreeView::branch:has-children:closed { /*Dark*/
+    image: none; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QTreeView::branch:has-children:closed { /*Light*/
+    image: none; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QTreeView::branch:has-children:open { /*Dark*/
+    image: none; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QTreeView::branch:has-children:open { /*Light*/
+    image: none; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QScrollBar:vertical { /*Dark*/
+    background-color: transparent; /*Dark*/
+    width: 14px; /*Dark*/
+    margin: 0; /*Dark*/
+} /*Dark*/
+
+QScrollBar:vertical { /*Light*/
+    background-color: transparent; /*Light*/
+    width: 14px; /*Light*/
+    margin: 0; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:vertical { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    min-height: 30px; /*Dark*/
+    border-radius: 7px; /*Dark*/
+    margin: 2px; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:vertical { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    min-height: 30px; /*Light*/
+    border-radius: 7px; /*Light*/
+    margin: 2px; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:vertical:hover { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:vertical:hover { /*Light*/
+    background-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:vertical:pressed { /*Dark*/
+    background-color: #52525b; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:vertical:pressed { /*Light*/
+    background-color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QScrollBar::add-line:vertical, /*Dark*/
+QScrollBar::sub-line:vertical { /*Dark*/
+    height: 0; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QScrollBar::add-line:vertical, /*Light*/
+QScrollBar::sub-line:vertical { /*Light*/
+    height: 0; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QScrollBar::add-page:vertical, /*Dark*/
+QScrollBar::sub-page:vertical { /*Dark*/
+    background: none; /*Dark*/
+} /*Dark*/
+
+QScrollBar::add-page:vertical, /*Light*/
+QScrollBar::sub-page:vertical { /*Light*/
+    background: none; /*Light*/
+} /*Light*/
+
+QScrollBar:horizontal { /*Dark*/
+    background-color: transparent; /*Dark*/
+    height: 14px; /*Dark*/
+    margin: 0; /*Dark*/
+} /*Dark*/
+
+QScrollBar:horizontal { /*Light*/
+    background-color: transparent; /*Light*/
+    height: 14px; /*Light*/
+    margin: 0; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:horizontal { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    min-width: 30px; /*Dark*/
+    border-radius: 7px; /*Dark*/
+    margin: 2px; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:horizontal { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    min-width: 30px; /*Light*/
+    border-radius: 7px; /*Light*/
+    margin: 2px; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:horizontal:hover { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:horizontal:hover { /*Light*/
+    background-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QScrollBar::handle:horizontal:pressed { /*Dark*/
+    background-color: #52525b; /*Dark*/
+} /*Dark*/
+
+QScrollBar::handle:horizontal:pressed { /*Light*/
+    background-color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QScrollBar::add-line:horizontal, /*Dark*/
+QScrollBar::sub-line:horizontal { /*Dark*/
+    width: 0; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QScrollBar::add-line:horizontal, /*Light*/
+QScrollBar::sub-line:horizontal { /*Light*/
+    width: 0; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QScrollBar::add-page:horizontal, /*Dark*/
+QScrollBar::sub-page:horizontal { /*Dark*/
+    background: none; /*Dark*/
+} /*Dark*/
+
+QScrollBar::add-page:horizontal, /*Light*/
+QScrollBar::sub-page:horizontal { /*Light*/
+    background: none; /*Light*/
+} /*Light*/
+
+QMenu { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 8px; /*Dark*/
+    padding: 6px; /*Dark*/
+} /*Dark*/
+
+QMenu { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 8px; /*Light*/
+    padding: 6px; /*Light*/
+} /*Light*/
+
+QMenu::item { /*Dark*/
+    padding: 8px 16px; /*Dark*/
+    border-radius: 4px; /*Dark*/
+    margin: 2px 0; /*Dark*/
+} /*Dark*/
+
+QMenu::item { /*Light*/
+    padding: 8px 16px; /*Light*/
+    border-radius: 4px; /*Light*/
+    margin: 2px 0; /*Light*/
+} /*Light*/
+
+QMenu::item:selected { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QMenu::item:selected { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QMenu::item:disabled { /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QMenu::item:disabled { /*Light*/
+    color: #a1a1aa; /*Light*/
+} /*Light*/
+
+QMenu::separator { /*Dark*/
+    height: 1px; /*Dark*/
+    background-color: #27272a; /*Dark*/
+    margin: 6px 10px; /*Dark*/
+} /*Dark*/
+
+QMenu::separator { /*Light*/
+    height: 1px; /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    margin: 6px 10px; /*Light*/
+} /*Light*/
+
+QMenu::icon { /*Dark*/
+    padding-left: 10px; /*Dark*/
+} /*Dark*/
+
+QMenu::icon { /*Light*/
+    padding-left: 10px; /*Light*/
+} /*Light*/
+
+QMenuBar { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border-bottom: 1px solid #27272a; /*Dark*/
+    padding: 4px; /*Dark*/
+} /*Dark*/
+
+QMenuBar { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border-bottom: 1px solid #e4e4e7; /*Light*/
+    padding: 4px; /*Light*/
+} /*Light*/
+
+QMenuBar::item { /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    background-color: transparent; /*Dark*/
+    border-radius: 4px; /*Dark*/
+} /*Dark*/
+
+QMenuBar::item { /*Light*/
+    padding: 8px 12px; /*Light*/
+    background-color: transparent; /*Light*/
+    border-radius: 4px; /*Light*/
+} /*Light*/
+
+QMenuBar::item:selected { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QMenuBar::item:selected { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QMenuBar::item:pressed { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QMenuBar::item:pressed { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QToolBar { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    border: none; /*Dark*/
+    spacing: 6px; /*Dark*/
+    padding: 6px; /*Dark*/
+} /*Dark*/
+
+QToolBar { /*Light*/
+    background-color: #ffffff; /*Light*/
+    border: none; /*Light*/
+    spacing: 6px; /*Light*/
+    padding: 6px; /*Light*/
+} /*Light*/
+
+QToolBar::separator { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    width: 1px; /*Dark*/
+    margin: 6px 4px; /*Dark*/
+} /*Dark*/
+
+QToolBar::separator { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+    width: 1px; /*Light*/
+    margin: 6px 4px; /*Light*/
+} /*Light*/
+
+QToolButton { /*Dark*/
+    background-color: transparent; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: none; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px; /*Dark*/
+} /*Dark*/
+
+QToolButton { /*Light*/
+    background-color: transparent; /*Light*/
+    color: #09090b; /*Light*/
+    border: none; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px; /*Light*/
+} /*Light*/
+
+QToolButton:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QToolButton:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QToolButton:pressed { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QToolButton:pressed { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QToolButton:checked { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QToolButton:checked { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QToolButton[popupMode="1"] { /*Dark*/
+    padding-right: 20px; /*Dark*/
+} /*Dark*/
+
+QToolButton[popupMode="1"] { /*Light*/
+    padding-right: 20px; /*Light*/
+} /*Light*/
+
+QToolButton::menu-button { /*Dark*/
+    border: none; /*Dark*/
+    border-left: 1px solid #27272a; /*Dark*/
+    width: 18px; /*Dark*/
+    border-radius: 0; /*Dark*/
+} /*Dark*/
+
+QToolButton::menu-button { /*Light*/
+    border: none; /*Light*/
+    border-left: 1px solid #e4e4e7; /*Light*/
+    width: 18px; /*Light*/
+    border-radius: 0; /*Light*/
+} /*Light*/
+
+QToolButton::menu-button:hover { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QToolButton::menu-button:hover { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QStatusBar { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #a1a1aa; /*Dark*/
+    border-top: 1px solid #27272a; /*Dark*/
+} /*Dark*/
+
+QStatusBar { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #71717a; /*Light*/
+    border-top: 1px solid #e4e4e7; /*Light*/
+} /*Light*/
+
+QStatusBar::item { /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QStatusBar::item { /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QStatusBar QLabel { /*Dark*/
+    color: #a1a1aa; /*Dark*/
+    padding: 4px 8px; /*Dark*/
+} /*Dark*/
+
+QStatusBar QLabel { /*Light*/
+    color: #71717a; /*Light*/
+    padding: 4px 8px; /*Light*/
+} /*Light*/
+
+QDialog { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QDialog { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QMessageBox { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QMessageBox { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QMessageBox QLabel { /*Dark*/
+    color: #fafafa; /*Dark*/
+    padding: 10px; /*Dark*/
+} /*Dark*/
+
+QMessageBox QLabel { /*Light*/
+    color: #09090b; /*Light*/
+    padding: 10px; /*Light*/
+} /*Light*/
+
+QDialogButtonBox QPushButton { /*Dark*/
+    min-width: 80px; /*Dark*/
+} /*Dark*/
+
+QDialogButtonBox QPushButton { /*Light*/
+    min-width: 80px; /*Light*/
+} /*Light*/
+
+QGroupBox { /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 8px; /*Dark*/
+    margin-top: 16px; /*Dark*/
+    padding-top: 16px; /*Dark*/
+    font-weight: 600; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QGroupBox { /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 8px; /*Light*/
+    margin-top: 16px; /*Light*/
+    padding-top: 16px; /*Light*/
+    font-weight: 600; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QGroupBox::title { /*Dark*/
+    subcontrol-origin: margin; /*Dark*/
+    subcontrol-position: top left; /*Dark*/
+    padding: 0 10px; /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    left: 10px; /*Dark*/
+} /*Dark*/
+
+QGroupBox::title { /*Light*/
+    subcontrol-origin: margin; /*Light*/
+    subcontrol-position: top left; /*Light*/
+    padding: 0 10px; /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    left: 10px; /*Light*/
+} /*Light*/
+
+QToolTip { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+    font-size: 13px; /*Dark*/
+} /*Dark*/
+
+QToolTip { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+    font-size: 13px; /*Light*/
+} /*Light*/
+
+QDockWidget { /*Dark*/
+    color: #fafafa; /*Dark*/
+    titlebar-close-icon: none; /*Dark*/
+    titlebar-normal-icon: none; /*Dark*/
+} /*Dark*/
+
+QDockWidget { /*Light*/
+    color: #09090b; /*Light*/
+    titlebar-close-icon: none; /*Light*/
+    titlebar-normal-icon: none; /*Light*/
+} /*Light*/
+
+QDockWidget::title { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 4px; /*Dark*/
+    padding: 8px; /*Dark*/
+    font-weight: 600; /*Dark*/
+} /*Dark*/
+
+QDockWidget::title { /*Light*/
+    background-color: #f9fafb; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 4px; /*Light*/
+    padding: 8px; /*Light*/
+    font-weight: 600; /*Light*/
+} /*Light*/
+
+QDockWidget::close-button, /*Dark*/
+QDockWidget::float-button { /*Dark*/
+    background-color: transparent; /*Dark*/
+    border: none; /*Dark*/
+    padding: 4px; /*Dark*/
+} /*Dark*/
+
+QDockWidget::close-button, /*Light*/
+QDockWidget::float-button { /*Light*/
+    background-color: transparent; /*Light*/
+    border: none; /*Light*/
+    padding: 4px; /*Light*/
+} /*Light*/
+
+QDockWidget::close-button:hover, /*Dark*/
+QDockWidget::float-button:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+    border-radius: 4px; /*Dark*/
+} /*Dark*/
+
+QDockWidget::close-button:hover, /*Light*/
+QDockWidget::float-button:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+    border-radius: 4px; /*Light*/
+} /*Light*/
+
+QSplitter::handle { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QSplitter::handle { /*Light*/
+    background-color: #e4e4e7; /*Light*/
+} /*Light*/
+
+QSplitter::handle:horizontal { /*Dark*/
+    width: 2px; /*Dark*/
+} /*Dark*/
+
+QSplitter::handle:horizontal { /*Light*/
+    width: 2px; /*Light*/
+} /*Light*/
+
+QSplitter::handle:vertical { /*Dark*/
+    height: 2px; /*Dark*/
+} /*Dark*/
+
+QSplitter::handle:vertical { /*Light*/
+    height: 2px; /*Light*/
+} /*Light*/
+
+QSplitter::handle:hover { /*Dark*/
+    background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QSplitter::handle:hover { /*Light*/
+    background-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QCalendarWidget { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+} /*Light*/
+
+QCalendarWidget QWidget { /*Dark*/
+    alternate-background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget QWidget { /*Light*/
+    alternate-background-color: #f9fafb; /*Light*/
+} /*Light*/
+
+QCalendarWidget QAbstractItemView { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    selection-background-color: #fafafa; /*Dark*/
+    selection-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget QAbstractItemView { /*Light*/
+    background-color: #ffffff; /*Light*/
+    selection-background-color: #09090b; /*Light*/
+    selection-color: #fafafa; /*Light*/
+} /*Light*/
+
+QCalendarWidget QToolButton { /*Dark*/
+    color: #fafafa; /*Dark*/
+    background-color: transparent; /*Dark*/
+    border-radius: 4px; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget QToolButton { /*Light*/
+    color: #09090b; /*Light*/
+    background-color: transparent; /*Light*/
+    border-radius: 4px; /*Light*/
+} /*Light*/
+
+QCalendarWidget QToolButton:hover { /*Dark*/
+    background-color: #27272a; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget QToolButton:hover { /*Light*/
+    background-color: #f4f4f5; /*Light*/
+} /*Light*/
+
+QCalendarWidget QMenu { /*Dark*/
+    background-color: #18181b; /*Dark*/
+} /*Dark*/
+
+QCalendarWidget QMenu { /*Light*/
+    background-color: #ffffff; /*Light*/
+} /*Light*/
+
+QDateEdit, QTimeEdit, QDateTimeEdit { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 8px 12px; /*Dark*/
+} /*Dark*/
+
+QDateEdit, QTimeEdit, QDateTimeEdit { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 8px 12px; /*Light*/
+} /*Light*/
+
+QDateEdit:hover, QTimeEdit:hover, QDateTimeEdit:hover { /*Dark*/
+    border-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QDateEdit:hover, QTimeEdit:hover, QDateTimeEdit:hover { /*Light*/
+    border-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus { /*Dark*/
+    border-color: #d4d4d8; /*Dark*/
+} /*Dark*/
+
+QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus { /*Light*/
+    border-color: #3f3f46; /*Light*/
+} /*Light*/
+
+QDateEdit::drop-down, QTimeEdit::drop-down, QDateTimeEdit::drop-down { /*Dark*/
+    subcontrol-origin: padding; /*Dark*/
+    subcontrol-position: right; /*Dark*/
+    width: 30px; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QDateEdit::drop-down, QTimeEdit::drop-down, QDateTimeEdit::drop-down { /*Light*/
+    subcontrol-origin: padding; /*Light*/
+    subcontrol-position: right; /*Light*/
+    width: 30px; /*Light*/
+    border: none; /*Light*/
+} /*Light*/
+
+QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow { /*Dark*/
+    image: none; /*Dark*/
+    border-left: 5px solid transparent; /*Dark*/
+    border-right: 5px solid transparent; /*Dark*/
+    border-top: 6px solid #fafafa; /*Dark*/
+} /*Dark*/
+
+QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow { /*Light*/
+    image: none; /*Light*/
+    border-left: 5px solid transparent; /*Light*/
+    border-right: 5px solid transparent; /*Light*/
+    border-top: 6px solid #09090b; /*Light*/
+} /*Light*/
+
+QTextBrowser { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    color: #fafafa; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 6px; /*Dark*/
+    padding: 12px; /*Dark*/
+    selection-background-color: #3f3f46; /*Dark*/
+} /*Dark*/
+
+QTextBrowser { /*Light*/
+    background-color: #ffffff; /*Light*/
+    color: #09090b; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 6px; /*Light*/
+    padding: 12px; /*Light*/
+    selection-background-color: #d4d4d8; /*Light*/
+} /*Light*/
+
+QLabel { /*Dark*/
+    color: #fafafa; /*Dark*/
+    background-color: transparent; /*Dark*/
+} /*Dark*/
+
+QLabel { /*Light*/
+    color: #09090b; /*Light*/
+    background-color: transparent; /*Light*/
+} /*Light*/
+
+QLabel[role="heading"] { /*Dark*/
+    font-size: 20px; /*Dark*/
+    font-weight: 700; /*Dark*/
+} /*Dark*/
+
+QLabel[role="heading"] { /*Light*/
+    font-size: 20px; /*Light*/
+    font-weight: 700; /*Light*/
+} /*Light*/
+
+QLabel[role="subheading"] { /*Dark*/
+    font-size: 16px; /*Dark*/
+    font-weight: 600; /*Dark*/
+} /*Dark*/
+
+QLabel[role="subheading"] { /*Light*/
+    font-size: 16px; /*Light*/
+    font-weight: 600; /*Light*/
+} /*Light*/
+
+QLabel[role="muted"] { /*Dark*/
+    color: #71717a; /*Dark*/
+} /*Dark*/
+
+QLabel[role="muted"] { /*Light*/
+    color: #71717a; /*Light*/
+} /*Light*/
+
+QLabel[role="small"] { /*Dark*/
+    font-size: 12px; /*Dark*/
+    color: #a1a1aa; /*Dark*/
+} /*Dark*/
+
+QLabel[role="small"] { /*Light*/
+    font-size: 12px; /*Light*/
+    color: #71717a; /*Light*/
+} /*Light*/
+
+QFrame[role="card"] { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 8px; /*Dark*/
+    padding: 16px; /*Dark*/
+} /*Dark*/
+
+QFrame[role="card"] { /*Light*/
+    background-color: #ffffff; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 8px; /*Light*/
+    padding: 16px; /*Light*/
+} /*Light*/
+
+QFrame[role="popover"] { /*Dark*/
+    background-color: #18181b; /*Dark*/
+    border: 1px solid #27272a; /*Dark*/
+    border-radius: 8px; /*Dark*/
+    padding: 12px; /*Dark*/
+} /*Dark*/
+
+QFrame[role="popover"] { /*Light*/
+    background-color: #ffffff; /*Light*/
+    border: 1px solid #e4e4e7; /*Light*/
+    border-radius: 8px; /*Light*/
+    padding: 12px; /*Light*/
+} /*Light*/
+
+*:focus { /*Dark*/
+    outline: none; /*Dark*/
+} /*Dark*/
+
+*:focus { /*Light*/
+    outline: none; /*Light*/
+} /*Light*/
+
+QChartView { /*Dark*/
+    background-color: #09090b; /*Dark*/
+    border: none; /*Dark*/
+} /*Dark*/
+
+QChartView { /*Light*/
+    background-color: #ffffff; /*Light*/
+    border: none; /*Light*/
+} /*Light*/

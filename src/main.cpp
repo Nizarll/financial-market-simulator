@@ -1,73 +1,96 @@
+#include <algorithm>
 #include <iostream>
-#include <memory>
-#include <qapplication.h>
-#include <qboxlayout.h>
-#include <qevent.h>
+
+
+#include "utils.hpp"
+#include "widget.hpp"
+#include <QBoxLayout>
 #include <QDir>
-#include <QPushButton>
-#include <qobject.h>
-#include <qpushbutton.h>
+#include <qapplication.h>
+#include <qnamespace.h>
+#include <ranges>
 #include <string>
 #include "header.hpp"
 #include "stochastic_process.hpp"
-#include "graph.hpp"
-#include "shadcn_theme.hpp"
-#include "parameters_panel.hpp"
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);
 
-  auto parameters_panel = ParametersPanel{
-    {"Stock Initial Price", f64(10) },
-    {"Drift Rate", f64(0.05) },
-    {"Volatility", f64(0.2) },
-    {"Sample Size", int(500) },
-    {"Step", f64(.1) }
+  GBMContext context {
+    .initial_value = 150,
+    .drift_rate = 0.01,
+    .volatility = 0.15,
+    .step = 0.2,
   };
 
-  auto gbm = std::make_shared<CubicSplineInterpolatedGBM>(
-    parameters_panel.retrieve_value("Stock Initial Price")->as<f64>(),
-    parameters_panel.retrieve_value("Drift Rate")->as<f64>(),
-    parameters_panel.retrieve_value("Volatility")->as<f64>(),
-    static_cast<u64>(parameters_panel.retrieve_value("Sample Size")->as<int>()),
-    parameters_panel.retrieve_value("Step")->as<f64>()
-  );
-
-  parameters_panel.value_changed("Stock Initial Price", [gbm](ParametersPanel::InputField field){ gbm->get_gbm().set_initial_val(field.as<f64>()); });
-  parameters_panel.value_changed("Drift Rate",[gbm](ParametersPanel::InputField field){ gbm->get_gbm().set_drift_rate(field.as<f64>()); });
-  parameters_panel.value_changed("Volatility",[gbm](ParametersPanel::InputField field){ gbm->get_gbm().set_volatility(field.as<f64>()); });
-  //parameters_panel.value_changed("Step", [gbm](ParametersPanel::InputField field){ gbm->get_gbm().set_step(static_cast<u64>(field.as<int>())); });
-  //parameters_panel.value_changed("Sample Size",[gbm](parameters_panel::InputField field){ gbm->get_gbm().set_sample_size(field.as<f64>()); });
-
-  auto graph_container = GraphContainer(gbm);
-  std::vector<std::string> parameters{"Stock Initial Price", "Drift Rate", "Volatility", "Sample Size", "Step"};
-
-  for (const auto& parameter: parameters)
-    parameters_panel.value_changed(parameter, [&graph_container](ParametersPanel::InputField field){ graph_container.refresh(); });
+  auto generate_gbm = [&](auto){
+    f64 idx = 0;
+    return gbm_prices(context) | std::views::take(static_cast<size_t>(365 / context.step))  
+    | std::views::transform([idx_counter = 0.0](f64 val) mutable {
+      return std::pair<f64, f64>{idx_counter++, val};
+    }) 
+    | std::ranges::to<std::vector>();
+  };
 
   QWidget window;
-  Header header;
+  std::vector<std::string> parameters{"Stock Initial Price", "Drift Rate", "Volatility", "Sample Size", "Step"};
 
-  auto* widget = new QWidget();
+  auto style = read_asset("styles/app.css");
+  Theme theme(app, style);
+  HeaderProps props {
+    .toggle_theme = [&](){
+      auto state = theme.getState();
+      theme.setState(state == Theme::Dark ? Theme::Light : Theme::Dark);
+    }
+  };
 
-  auto layout = new QHBoxLayout();
-  layout->addWidget(&parameters_panel, 2);
-  layout->addWidget(&graph_container, 8);
-  widget->setLayout(layout);
+  auto simulations = std::views::iota(0, 2) |
+    std::views::transform(generate_gbm) |
+    std::ranges::to<std::vector>();
 
-  auto win_layout = new QVBoxLayout();
-  win_layout->addWidget(&header, 1);
-  win_layout->addWidget(widget, 9);
-  window.setLayout(win_layout);
+  auto all_prices = simulations 
+    | std::views::join 
+    | std::views::transform([](const auto& pair){ return pair.second; })
+    | std::ranges::to<std::vector<f64>>();
 
-  QString stylesPath = QDir::currentPath() + "/assets/styles";
-  ShadcnTheme theme(stylesPath);
+  for (auto price : all_prices) std::cout << price << std::endl;
+  
+  auto min_price = std::ranges::min(all_prices);
+  auto max_price = std::ranges::max(all_prices);
 
-  theme.installOnWindow(&window, ShadcnTheme::Dark, &app);
-  header.theme_toggled([&theme, &window, &app](bool checked) {
-    theme.setTheme(checked ? ShadcnTheme::Dark : ShadcnTheme::Light, &app);
-  });
-
+  std::cout << "Price range: " << min_price << " to " << max_price << std::endl;
+  auto layout = VLayout(
+    Header(props).addStretch(false),
+    VLayout (
+      Text ( "Asset Pricing" ),
+      ComboBox(
+        "Base Value"
+      ).withOptions(std::vector<std::string>{
+        "Stock Pricing",
+        "Option Pricing"
+      })
+    ),
+    HLayout(
+      VLayout(
+        VLayout(Text( "Initial Price" ), Input ( Input::ValueType::F64 ) ),
+        VLayout(Text( "Volatiltiy Price" ), Input ( Input::ValueType::F64 ) ),
+        VLayout(Text( "Drift Rate" ), Input ( Input::ValueType::F64 ) ),
+        VLayout(Text( "Step" ), Input ( Input::ValueType::F64 ) )
+      ),
+      LineSeries()
+      .addSeriesVector(simulations)
+      .withXAxis({
+        .name = "Time",
+        .range = {0, 365}
+      }).withYAxis({
+        .name = "Stock Price",
+        .range = {
+          0, max_price
+        }
+      })
+    )
+  );
+  layout.fitTo(&window);
   window.show();
   return app.exec();
 }

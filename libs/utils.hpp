@@ -1,7 +1,14 @@
 #pragma once
 
+#include <filesystem>
 #include <cstdint>
 #include <QPointer>
+#include <fstream>
+#include <ios>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 #include <stdfloat>
 
 using u64 = std::uint64_t;
@@ -19,8 +26,14 @@ using f32 = _Float32;
 using f64 = _Float64;
 using f128 = _Float128;
 
-template <typename T, typename... Args>
-auto make_ptr(Args &&...args)
+static constexpr auto read_asset(std::string path) -> std::string
 {
-  return QPointer<T>(new T(std::forward<Args>(args)...));
+  auto file_path = std::filesystem::current_path() / "assets" / path;
+  auto stream = std::ifstream(file_path);
+  std::cout << file_path.filename() << std::endl << std::filesystem::absolute(file_path) << std::endl;
+  std::stringstream buffer;
+  if (not stream.is_open()) throw std::invalid_argument("failed to open asset at " + file_path.string());
+  buffer << stream.rdbuf();
+  stream.close();
+  return buffer.str();
 }
