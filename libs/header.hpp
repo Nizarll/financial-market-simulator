@@ -15,5 +15,5 @@ static auto Header(HeaderProps props) {
   return HLayout {
     Text{ "Stock Price Simulation" },
     Button { "Toggle Theme" }.clicked(std::move(theme_toggle_clicked)),
-  };
+  }.justifyBetween();
 }

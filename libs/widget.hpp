@@ -14,8 +14,11 @@
 #include <QWidget>
 #include <QValueAxis>
 
+#include <cstddef>
 #include <functional>
 #include <limits>
+#include <new>
+#include <qalgorithms.h>
 #include <qchar.h>
 #include <qchart.h>
 #include <qchartview.h>
@@ -29,10 +32,120 @@
 #include <ranges>
 #include <string>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 #include <variant>
 
 #include "utils.hpp"
+
+template <typename... Overloads>
+class FunctionOverload {
+  struct _FunctionOverloadStorage {
+    static constexpr std::size_t size = std::max({sizeof(Overloads)...});
+    static constexpr std::size_t alignment = std::max({alignof(Overloads)...});
+    alignas(alignment) std::byte data[size];
+  };
+  _FunctionOverloadStorage storage;
+  usz index;
+
+  template <std::size_t I = 0>
+  void copy_from(const FunctionOverload& other) {
+    if constexpr (I < sizeof...(Overloads)) {
+      if (other.index == I) {
+        using T = std::tuple_element_t<I, std::tuple<Overloads...>>;
+        new (storage.data) T(*std::launder(reinterpret_cast<const T*>(other.storage.data)));
+      } else {
+        copy_from<I + 1>(other);
+      }
+    }
+  }
+
+  template <std::size_t I = 0>
+  void move_from(FunctionOverload& other) {
+    if constexpr (I < sizeof...(Overloads)) {
+      if (other.index == I) {
+        using T = std::tuple_element_t<I, std::tuple<Overloads...>>;
+        new (storage.data) T(std::move(*std::launder(reinterpret_cast<T*>(other.storage.data))));
+      } else {
+        move_from<I + 1>(other);
+      }
+    }
+  }
+
+  template <typename T, usz i, typename First, typename... Rest>
+  static constexpr auto _index_of_impl() -> usz
+  {
+    if constexpr (std::same_as<T, First>) return i;
+    else return _index_of_impl<T, i + 1, Rest...>();
+  }
+
+  template <typename T, usz i>
+  static constexpr auto _index_of_impl() -> usz { return sizeof...(Overloads); }
+
+  template <typename T, usz i = 0>
+  static constexpr auto _index_of() -> usz
+  {
+    static_assert(_index_of_impl<T, i, Overloads...>() < sizeof...(Overloads), "Type is not a valid overload");
+    return _index_of_impl<T, i, Overloads...>();
+  }
+
+public:
+  FunctionOverload(const FunctionOverload& other) : index(other.index) { copy_from(other); }
+  FunctionOverload(FunctionOverload&& other) noexcept : index(other.index) { move_from(other); }
+
+  FunctionOverload& operator=(const FunctionOverload& other) {
+    if (this != &other) {
+      this->~FunctionOverload();
+      index = other.index;
+      copy_from(other);
+    }
+    return *this;
+  }
+
+  FunctionOverload& operator=(FunctionOverload&& other) noexcept {
+    if (this != &other) {
+      this->~FunctionOverload();
+      index = other.index;
+      move_from(other);
+    }
+    return *this;
+  }
+
+  template <typename T> requires (!std::same_as<std::decay_t<T>, FunctionOverload>)
+  FunctionOverload(T&& t) {
+    constexpr auto idx = []<std::size_t... Is>(std::index_sequence<Is...>) {
+      std::size_t result = sizeof...(Overloads);
+      ((std::convertible_to<std::decay_t<T>, Overloads> ? (result = std::min(result, Is), true) : false) || ...);
+      return result;
+    }(std::index_sequence_for<Overloads...>{});
+    
+    static_assert(idx < sizeof...(Overloads), "Type is not convertible to any overload");
+    
+    using TargetType = std::tuple_element_t<idx, std::tuple<Overloads...>>;
+    index = idx;
+    new (storage.data) TargetType(std::forward<T>(t));
+  }
+
+  ~FunctionOverload() {
+    [this]<std::size_t... Is>(std::index_sequence<Is...>) {
+      auto destroy = [this]<std::size_t I>() {
+        if (index == I) {
+          using T = std::tuple_element_t<I, std::tuple<Overloads...>>;
+          reinterpret_cast<T*>(storage.data)->~T();
+        }
+      };
+      (destroy.template operator()<Is>(), ...);
+    }(std::index_sequence_for<Overloads...>{});
+  }
+
+  usz which() const { return index; }
+
+  template <typename T>
+  auto get(this auto&& self) {
+    assert(self.index == _index_of<T>() && "Type passed to get<T> is invalid");
+    return *std::launder(reinterpret_cast<T*>(const_cast<std::byte*>(self.storage.data)));
+  }
+};
 
 struct Theme {
   Theme(QApplication& app, const std::string& style);
@@ -58,10 +171,11 @@ concept CreatableWidget = requires (T widget, QWidget* parent, QBoxLayout* layou
 };
 
 template <CreatableWidget ...Widgets>
-auto add_widgets_to(QWidget* parent, QBoxLayout* layout, std::tuple<Widgets...> widgets)
+auto add_widgets_to(QWidget* parent, QBoxLayout* layout, std::tuple<Widgets...> widgets, auto lambda = [](){})
 {
-  std::apply([parent, layout](auto&&... members) mutable {
+  std::apply([parent, layout, lambda](auto&&... members) mutable {
     (([&]() {
+      lambda();
       members.create_widget(parent, layout);
     }()), ...);
   }, widgets);
@@ -106,7 +220,17 @@ struct Layout : public Widget<Layout<Widgets...>> {
       layout = new QHBoxLayout();
     }
 
-    ::add_widgets_to(parent, layout, m_widgets);
+    if(m_justify_between) {
+      ::add_widgets_to(parent, layout, m_widgets, [layout](){
+        layout->addStretch();
+      });
+    }
+    else {
+      ::add_widgets_to(parent, layout, m_widgets, [layout](){
+        layout->addStretch();
+      });
+    }
+
 
     layout->setSizeConstraint(QLayout::SetMinimumSize);
     m_layout_ptr = layout;
@@ -119,8 +243,8 @@ struct Layout : public Widget<Layout<Widgets...>> {
 
   auto fitTo(this auto&& self, QWidget* parent)
   {
-
-    auto widget = self.create_widget(parent, nullptr);
+    if (parent->layout()) qDeleteAll(parent->layout()->children());
+    self.create_widget(parent, nullptr);
     parent->setLayout(self.m_layout_ptr);
     return self;
   }
@@ -137,12 +261,19 @@ struct Layout : public Widget<Layout<Widgets...>> {
     return self;
   }
 
+  auto justifyBetween(this auto&& self, bool justify = true)
+  {
+    self.m_justify_between = justify;
+    return self;
+  }
+
 private:
   std::tuple<Widgets...> m_widgets;
-  std::optional<bool> m_stretched{};
   std::optional<uint> m_spacing{};
   QBoxLayout* m_layout_ptr;
   LayoutDirection m_direction;
+  bool m_stretched{};
+  bool m_justify_between{};
 };
 
 template <typename... Widgets>
@@ -206,12 +337,19 @@ private:
 };
 
 struct Input: public Widget<Input> {
+
+  using OptionalListenerOverloads = std::optional<FunctionOverload<
+  std::function<void(f64)>,
+  std::function<void(u64)>,
+  std::function<void(std::string)>
+  >>;
+
   enum class ValueType {
     U64,
     F64,
     String
   };
-  Input(
+  constexpr Input(
     ValueType type = ValueType::U64,
     std::optional<std::string> placeholder = {},
     std::optional<std::variant<f64, u64, std::string>> default_value = {}
@@ -221,7 +359,8 @@ struct Input: public Widget<Input> {
   {}
 
 
-  auto valueChanged(this auto&& self, auto listener)
+  template <typename Func>
+  constexpr auto valueChanged(this auto&& self, Func listener)
   {
     self.m_value_changed = listener;
     return self;
@@ -240,10 +379,10 @@ struct Input: public Widget<Input> {
         ::QObject::connect(uint_widget,
                            qOverload<int>(&QSpinBox::valueChanged),
                            [value_changed = m_value_changed](u64 val){
-          if (not value_changed.has_value()) return;
-          auto listener = value_changed.value();
-          listener(val);
-        });
+                           if (not value_changed.has_value()) return;
+                           auto listener = value_changed.value().get<std::function<void(u64)>>();
+                           listener(val);
+                           });
         break;
       case ValueType::F64:
         float_widget = new QDoubleSpinBox(parent);
@@ -252,10 +391,10 @@ struct Input: public Widget<Input> {
         ::QObject::connect(float_widget,
                            qOverload<double>(&QDoubleSpinBox::valueChanged),
                            [value_changed = m_value_changed](u64 val){
-          if (not value_changed.has_value()) return;
-          auto listener = value_changed.value();
-          listener(val);
-        });
+                           if (not value_changed.has_value()) return;
+                           auto listener = value_changed.value().get<std::function<void(f64)>>();
+                           listener(val);
+                           });
         break;
       case ValueType::String:
         string_widget = new QLineEdit(parent);
@@ -264,10 +403,10 @@ struct Input: public Widget<Input> {
         ::QObject::connect(string_widget,
                            &QLineEdit::textChanged,
                            [value_changed = m_value_changed](QString val){
-          if (not value_changed.has_value()) return;
-          auto listener = value_changed.value();
-          listener(val.toStdString());
-        });
+                           if (not value_changed.has_value()) return;
+                           auto listener = value_changed.value().get<std::function<void(std::string)>>();
+                           listener(val.toStdString());
+                           });
         break;
     }
     layout->addWidget(widget);
@@ -277,7 +416,7 @@ private:
   std::variant<f64, u64, std::string> m_value;
   std::optional<std::string> m_placeholder;
   std::optional<std::variant<f64, u64, std::string>> m_default_value;
-  std::optional<std::function<void(std::variant<f64, u64, std::string>)>> m_value_changed;
+  OptionalListenerOverloads m_value_changed;
   std::optional<std::function<void(std::string)>> m_value_invalid;
   ValueType m_type{ValueType::U64};
 };
@@ -300,7 +439,7 @@ struct ComboBox : public Widget<ComboBox> {
       &QComboBox::currentTextChanged,
       [value_changed = m_value_changed](const QString& str) {
         value_changed.value_or([](auto){})(str.toStdString());
-    });
+      });
     return widget;
   }
 
@@ -309,7 +448,7 @@ struct ComboBox : public Widget<ComboBox> {
     self.m_options = options;
     return self;
   }
-  
+
   auto valueChanged(this auto&& self, std::function<void(std::string)> func)
   {
     self.m_value_changed = func;
@@ -356,16 +495,16 @@ struct LineSeries : public Widget<LineSeries> {
       auto x_axis = new QtCharts::QValueAxis();
       x_axis->setTitleText(QString::fromStdString(m_x_axis->name));
       x_axis->setRange(static_cast<qreal>(m_x_axis->range.first), 
-                 static_cast<qreal>(m_x_axis->range.second));
+                       static_cast<qreal>(m_x_axis->range.second));
       chart->addAxis(x_axis, Qt::AlignBottom);
       std::cout << "Range is : " << m_x_axis->range.first << " :: " << m_x_axis->range.second << std::endl;
     }
-    
+
     if(m_y_axis.has_value()) {
       auto y_axis = new QtCharts::QValueAxis();
       y_axis->setTitleText(QString::fromStdString(m_y_axis->name));
       y_axis->setRange(static_cast<qreal>(m_y_axis->range.first), 
-                 static_cast<qreal>(m_y_axis->range.second));
+                       static_cast<qreal>(m_y_axis->range.second));
       chart->addAxis(y_axis, Qt::AlignLeft);
       std::cout << "Range is : " << m_y_axis->range.first << " :: " << m_y_axis->range.second << std::endl;
     }
@@ -392,7 +531,7 @@ struct LineSeries : public Widget<LineSeries> {
     self.m_series.emplace_back(items);
     return self;
   }
-  
+
   auto addSeriesVector(this LineSeries&& self, const std::vector<std::vector<std::pair<f64, f64>>>& items)
   {
     for (auto& serie : items) self.m_series.emplace_back(serie);
