@@ -8,12 +8,10 @@ struct HeaderProps {
 };
 
 static auto Header(HeaderProps props) {
-  auto theme_toggle_clicked = [props](bool){
-    props.toggle_theme();
-  };
+  auto theme_toggle_clicked = [props](bool){ props.toggle_theme(); };
 
   return HLayout {
     Text{ "Stock Price Simulation" },
-    Button { "Toggle Theme" }.clicked(std::move(theme_toggle_clicked)),
-  }.justifyBetween();
+    Button { "Toggle Theme" }.clicked(theme_toggle_clicked),
+  }.justifyBetween().withMaxSize({0, 32});
 }

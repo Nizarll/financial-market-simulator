@@ -1,4 +1,5 @@
 #pragma once
+
 #include "utils.hpp"
 #include <generator>
 #include <random>

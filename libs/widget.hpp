@@ -16,7 +16,6 @@
 
 #include <cstddef>
 #include <functional>
-#include <limits>
 #include <new>
 #include <qalgorithms.h>
 #include <qchar.h>
@@ -24,11 +23,13 @@
 #include <qchartview.h>
 #include <qcombobox.h>
 #include <qglobal.h>
+#include <qlayoutitem.h>
 #include <qlineseries.h>
 #include <qlist.h>
 #include <qnamespace.h>
 #include <qobject.h>
 #include <qspinbox.h>
+#include <qvalueaxis.h>
 #include <ranges>
 #include <string>
 #include <tuple>
@@ -37,6 +38,83 @@
 #include <variant>
 
 #include "utils.hpp"
+
+struct Size {
+  uint width;
+  uint height;
+};
+
+template <typename T, typename... Deps>
+class ReactiveState;
+
+template <typename T>
+struct is_reactive_state : std::false_type {};
+
+template <typename T, typename... Deps>
+struct is_reactive_state<ReactiveState<T, Deps...>> : std::true_type {};
+
+template <typename T>
+concept Reactive = is_reactive_state<std::remove_cvref_t<T>>::value;
+
+
+template <typename T>
+using Ref = std::reference_wrapper<T>;
+
+template <typename T, typename... Deps>
+class ReactiveState {
+public:
+  using value_type = T;
+  using Listener = std::function<void(const T&)>;
+
+  T val;
+
+  ReactiveState(const T& v) requires (sizeof...(Deps) == 0) : val(v) {}
+  ReactiveState(T&& v) requires (sizeof...(Deps) == 0) : val(std::move(v)) {}
+
+  void subscribe(Listener listener) { 
+    m_listeners.emplace_back(std::move(listener)); 
+  }
+
+  void set(const T& v) requires (sizeof...(Deps) == 0) { 
+    val = v;
+    for (auto& listener : m_listeners) {
+      listener(val);
+    }
+  }
+
+private:
+  std::vector<Listener> m_listeners;
+  std::tuple<Ref<Deps>...> m_deps;
+};
+
+template <typename T>
+ReactiveState(const T&) -> ReactiveState<T>;
+template <typename T>
+ReactiveState(T&&) -> ReactiveState<std::remove_cvref_t<T>>;
+
+template <typename F, typename... Refs> requires (Reactive<typename Refs::type> && ...)
+ReactiveState(F&&, std::tuple<Refs...>) -> ReactiveState<
+  std::invoke_result_t<F, typename Refs::type::value_type&...>,
+  typename Refs::type...
+>;
+
+template <typename F, Reactive... Rs>
+auto make_reactive(F&& func, Rs&... deps) -> ReactiveState<std::invoke_result_t<F, typename Rs::value_type&...>>
+{
+  using ResultT = std::invoke_result_t<F, typename Rs::value_type&...>;
+  ReactiveState<ResultT> result(func(deps.val...));
+  auto update = [&result, func = std::forward<F>(func), &deps...]() {
+    result.set(func(deps.val...));
+  };
+  (deps.subscribe([update](const auto&) { update(); }), ...);
+  return result;
+}
+
+template <typename T>
+static auto make_reactive(T&& arg)
+{
+  return ReactiveState<T>( std::forward<T>(arg));
+}
 
 template <typename... Overloads>
 class FunctionOverload {
@@ -131,7 +209,7 @@ public:
       auto destroy = [this]<std::size_t I>() {
         if (index == I) {
           using T = std::tuple_element_t<I, std::tuple<Overloads...>>;
-          reinterpret_cast<T*>(storage.data)->~T();
+          std::launder(reinterpret_cast<T*>(storage.data))->~T();
         }
       };
       (destroy.template operator()<Is>(), ...);
@@ -171,11 +249,10 @@ concept CreatableWidget = requires (T widget, QWidget* parent, QBoxLayout* layou
 };
 
 template <CreatableWidget ...Widgets>
-auto add_widgets_to(QWidget* parent, QBoxLayout* layout, std::tuple<Widgets...> widgets, auto lambda = [](){})
+auto add_widgets_to(QWidget* parent, QBoxLayout* layout, std::tuple<Widgets...> widgets)
 {
-  std::apply([parent, layout, lambda](auto&&... members) mutable {
+  std::apply([parent, layout](auto&&... members) mutable {
     (([&]() {
-      lambda();
       members.create_widget(parent, layout);
     }()), ...);
   }, widgets);
@@ -184,12 +261,6 @@ auto add_widgets_to(QWidget* parent, QBoxLayout* layout, std::tuple<Widgets...> 
 
 template <typename T>
 struct Widget {
-
-  auto withAlignment(this auto&& self, Qt::Alignment alignment)
-  {
-    self.m_alignment = alignment;
-    return self;
-  }
   virtual auto create_widget(QWidget* parent, QBoxLayout* layout) -> QWidget* = 0;
 
 protected:
@@ -207,38 +278,53 @@ struct Layout : public Widget<Layout<Widgets...>> {
   explicit Layout(LayoutDirection dir, Widgets&&... widgets)
   : m_widgets(std::forward<Widgets>(widgets)...), m_direction(dir) {}
 
-  explicit Layout(Widgets&&... widgets) 
+  explicit Layout(Widgets&&... widgets)
     : m_widgets(std::forward<Widgets>(widgets)...),
     m_direction(LayoutDirection::Horizontal) {}
 
   auto create_widget(QWidget* parent, QBoxLayout* parent_layout) -> QWidget*
   {
     QBoxLayout* layout = nullptr;
+    QWidget* widget = new QWidget();
     if (m_direction == LayoutDirection::Vertical) {
       layout = new QVBoxLayout();
     } else {
       layout = new QHBoxLayout();
     }
+    widget->setLayout(layout);
+    layout->setSizeConstraint(QLayout::SetMinimumSize);
+
+    if (m_max_size) {
+      auto max = m_max_size.value();
+      if (max.width > 0) widget->setMaximumWidth(max.width);
+      if (max.height > 0) widget->setMaximumHeight(max.height);
+    }
+
+    if (m_min_size) {
+      auto min = m_min_size.value();
+      if (min.width > 0) widget->setMinimumWidth(min.width);
+      if (min.height > 0) widget->setMinimumHeight(min.height);
+    }
 
     if(m_justify_between) {
-      ::add_widgets_to(parent, layout, m_widgets, [layout](){
-        layout->addStretch();
-      });
-    }
-    else {
-      ::add_widgets_to(parent, layout, m_widgets, [layout](){
-        layout->addStretch();
-      });
+      layout->addSpacerItem(
+        new QSpacerItem(
+          0,
+          0,
+          m_direction == LayoutDirection::Vertical ? QSizePolicy::Expanding : QSizePolicy::Fixed,
+          m_direction == LayoutDirection::Vertical ? QSizePolicy::Fixed     : QSizePolicy::Expanding
+        )
+      );
+      layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     }
 
-
-    layout->setSizeConstraint(QLayout::SetMinimumSize);
+    ::add_widgets_to(parent, layout, m_widgets);
     m_layout_ptr = layout;
     if (m_spacing) layout->setSpacing(m_spacing.value());
     if (m_stretched) layout->addStretch();
     if (!parent_layout) layout->addStretch();
-    else parent_layout->addLayout(layout);
-    return parent;
+    else parent_layout->addWidget(widget);
+    return widget;
   }
 
   auto fitTo(this auto&& self, QWidget* parent)
@@ -246,6 +332,18 @@ struct Layout : public Widget<Layout<Widgets...>> {
     if (parent->layout()) qDeleteAll(parent->layout()->children());
     self.create_widget(parent, nullptr);
     parent->setLayout(self.m_layout_ptr);
+    return self;
+  }
+
+  auto withMaxSize(this auto&& self, Size max)
+  {
+    self.m_max_size = max;
+    return self;
+  }
+
+  auto withMinSize(this auto&& self, Size min)
+  {
+    self.m_min_size = min;
     return self;
   }
 
@@ -267,8 +365,11 @@ struct Layout : public Widget<Layout<Widgets...>> {
     return self;
   }
 
+
 private:
   std::tuple<Widgets...> m_widgets;
+  std::optional<Size> m_min_size{};
+  std::optional<Size> m_max_size{};
   std::optional<uint> m_spacing{};
   QBoxLayout* m_layout_ptr;
   LayoutDirection m_direction;
@@ -376,37 +477,41 @@ struct Input: public Widget<Input> {
         uint_widget = new QSpinBox(parent); //TODO: find a fix for int -> u64 range conversion
         uint_widget->setValue(std::get<u64>(m_default_value.value_or(u64{})));
         widget = uint_widget;
-        ::QObject::connect(uint_widget,
-                           qOverload<int>(&QSpinBox::valueChanged),
-                           [value_changed = m_value_changed](u64 val){
-                           if (not value_changed.has_value()) return;
-                           auto listener = value_changed.value().get<std::function<void(u64)>>();
-                           listener(val);
-                           });
+        ::QObject::connect(
+          uint_widget,
+          qOverload<int>(&QSpinBox::valueChanged),
+          [value_changed = m_value_changed](u64 val) {
+            if (not value_changed.has_value()) return;
+            auto listener = value_changed.value().get<std::function<void(u64)>>();
+            listener(val);
+          }
+        );
         break;
       case ValueType::F64:
         float_widget = new QDoubleSpinBox(parent);
         float_widget->setValue(std::get<f64>(m_default_value.value_or(f64{})));
         widget = float_widget;
-        ::QObject::connect(float_widget,
-                           qOverload<double>(&QDoubleSpinBox::valueChanged),
-                           [value_changed = m_value_changed](u64 val){
-                           if (not value_changed.has_value()) return;
-                           auto listener = value_changed.value().get<std::function<void(f64)>>();
-                           listener(val);
-                           });
+        ::QObject::connect(
+          float_widget,
+          qOverload<double>(&QDoubleSpinBox::valueChanged),
+          [value_changed = m_value_changed](u64 val) {
+            if (not value_changed.has_value()) return;
+            auto listener = value_changed.value().get<std::function<void(f64)>>();
+            listener(val);
+          });
         break;
       case ValueType::String:
         string_widget = new QLineEdit(parent);
         string_widget->setPlaceholderText(QString::fromStdString(m_placeholder.value_or("")));
         widget = string_widget;
-        ::QObject::connect(string_widget,
-                           &QLineEdit::textChanged,
-                           [value_changed = m_value_changed](QString val){
-                           if (not value_changed.has_value()) return;
-                           auto listener = value_changed.value().get<std::function<void(std::string)>>();
-                           listener(val.toStdString());
-                           });
+        ::QObject::connect(
+          string_widget,
+          &QLineEdit::textChanged,
+          [value_changed = m_value_changed](QString val) {
+            if (not value_changed.has_value()) return;
+            auto listener = value_changed.value().get<std::function<void(std::string)>>();
+            listener(val.toStdString());
+          });
         break;
     }
     layout->addWidget(widget);
@@ -449,6 +554,7 @@ struct ComboBox : public Widget<ComboBox> {
     return self;
   }
 
+
   auto valueChanged(this auto&& self, std::function<void(std::string)> func)
   {
     self.m_value_changed = func;
@@ -469,78 +575,96 @@ struct LineSeries : public Widget<LineSeries> {
     std::optional<std::string> format;
   };
 
+  using Series = std::vector<std::vector<std::pair<f64, f64>>>;
+  using SeriesRef = std::reference_wrapper<ReactiveState<Series>>;
+  using AxisRef = std::reference_wrapper<ReactiveState<Axis>>;
+
   LineSeries() {}
   auto create_widget(QWidget* parent, QBoxLayout* layout) -> QWidget*
   {
     auto* widget = new QtCharts::QChartView();
     auto* chart = new QtCharts::QChart();
 
-    auto series = m_series | std::views::transform([](const std::vector<std::pair<f64, f64>>& vec) {
-      return vec | std::views::transform([](std::pair<f64, f64> point) { return QPointF{point.first, point.second}; }) |
-      std::ranges::to<QList<QPointF>>();
-    }) | std::ranges::to<std::vector<QList<QPointF>>>();
+    auto create_axis = [&](std::optional<AxisRef>& opt_axis, Qt::Alignment align) -> QtCharts::QValueAxis* {
+      if (!opt_axis) return nullptr;
+      
+      auto& axis_state = opt_axis->get();
+      auto& axis_data = axis_state.val;
+      
+      auto* axis = new QtCharts::QValueAxis();
+      axis->setTitleText(QString::fromStdString(axis_data.name));
+      axis->setRange(axis_data.range.first, axis_data.range.second);
+      chart->addAxis(axis, align);
+      
+      axis_state.subscribe([axis](const auto& val) {
+        axis->setTitleText(QString::fromStdString(val.name));
+        axis->setRange(val.range.first, val.range.second);
+      });
+      
+      return axis;
+    };
 
-    QPen pen(QColor("#3b82f6")); // TODO: abstract it away
-    pen.setWidth(2);
+    auto to_qpoints = [](const auto& path) {
+      return path | std::views::transform([](auto p) {
+        return QPointF{p.first, p.second};
+      }) | std::ranges::to<QList<QPointF>>();
+    };
 
-    for (auto serie : series) {
-      auto* line_series = new QtCharts::QLineSeries();
-      line_series->setUseOpenGL();
-      line_series->setPen(pen);
-      line_series->append(serie);
-      chart->addSeries(line_series);
-    }
+    QtCharts::QValueAxis* x_axis = create_axis(m_x_axis, Qt::AlignBottom);
+    QtCharts::QValueAxis* y_axis = create_axis(m_y_axis, Qt::AlignLeft);
 
-    if(m_x_axis.has_value()) {
-      auto x_axis = new QtCharts::QValueAxis();
-      x_axis->setTitleText(QString::fromStdString(m_x_axis->name));
-      x_axis->setRange(static_cast<qreal>(m_x_axis->range.first), 
-                       static_cast<qreal>(m_x_axis->range.second));
-      chart->addAxis(x_axis, Qt::AlignBottom);
-      std::cout << "Range is : " << m_x_axis->range.first << " :: " << m_x_axis->range.second << std::endl;
-    }
+    if (m_series) {
+      auto handle_series_change = [this, chart, x_axis, y_axis, to_qpoints](const auto& val){
+        chart->removeAllSeries();
+        auto series = val                        |
+          std::views::transform(to_qpoints) |
+          std::ranges::to<std::vector>();
 
-    if(m_y_axis.has_value()) {
-      auto y_axis = new QtCharts::QValueAxis();
-      y_axis->setTitleText(QString::fromStdString(m_y_axis->name));
-      y_axis->setRange(static_cast<qreal>(m_y_axis->range.first), 
-                       static_cast<qreal>(m_y_axis->range.second));
-      chart->addAxis(y_axis, Qt::AlignLeft);
-      std::cout << "Range is : " << m_y_axis->range.first << " :: " << m_y_axis->range.second << std::endl;
+        QColor color("#3b82f6");
+        color.setAlpha(120);
+        QPen pen(color); // TODO: abstract it away
+        pen.setWidth(2);
+
+        for (auto serie : series) {
+          auto* line_series = new QtCharts::QLineSeries();
+          line_series->setPen(pen);
+          line_series->append(serie);
+          chart->addSeries(line_series);
+          if (x_axis) line_series->attachAxis(x_axis);
+          if (y_axis) line_series->attachAxis(y_axis);
+        }
+      };
+      m_series.value().get().subscribe(handle_series_change);
+      handle_series_change(m_series.value().get().val); // initialize
     }
 
     widget->setChart(chart);
     layout->addWidget(widget);
+    m_widget_ptr = widget;
     return widget;
   }
 
-  auto withYAxis(this LineSeries&& self, Axis axis)
+  auto withYAxis(this LineSeries&& self, AxisRef axis)
   {
     self.m_y_axis = axis;
     return self;
   }
 
-  auto withXAxis(this LineSeries&& self, Axis axis)
+  auto withXAxis(this LineSeries&& self, AxisRef axis)
   {
     self.m_x_axis = axis;
     return self;
   }
-
-  auto addSeries(this auto&& self, const std::vector<std::pair<f64, f64>>& items)
+  
+  auto addManySeries(this LineSeries&& self, SeriesRef state)
   {
-    self.m_series.emplace_back(items);
-    return self;
-  }
-
-  auto addSeriesVector(this LineSeries&& self, const std::vector<std::vector<std::pair<f64, f64>>>& items)
-  {
-    for (auto& serie : items) self.m_series.emplace_back(serie);
+    self.m_series = state;
     return self;
   }
 
 private:
-  std::vector<std::vector<std::pair<f64, f64>>> m_series;
-  std::optional<std::string> m_base_value;
-  std::optional<Axis> m_x_axis;
-  std::optional<Axis> m_y_axis;
+  std::optional<SeriesRef> m_series;
+  std::optional<AxisRef> m_x_axis;
+  std::optional<AxisRef> m_y_axis;
+  QtCharts::QChartView* m_widget_ptr;
 };
