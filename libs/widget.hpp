@@ -1,6 +1,5 @@
 #pragma once
 
-#include <concepts>
 #include <QObject>
 #include <QBoxLayout>
 #include <QEvent>
@@ -13,35 +12,68 @@
 #include <QSpinBox>
 #include <QWidget>
 #include <QValueAxis>
-
-#include <cstddef>
+#include <QBarSeries>
+#include <QLineSeries>
+#include <QChart>
+#include <QChartView>
+#include <QComboBox>
+#include <QBarSeries>
+#include <QBarSet>
 #include <functional>
 #include <new>
-#include <qalgorithms.h>
-#include <qchar.h>
-#include <qchart.h>
-#include <qchartview.h>
-#include <qcombobox.h>
-#include <qglobal.h>
-#include <qlayoutitem.h>
-#include <qlineseries.h>
-#include <qlist.h>
-#include <qnamespace.h>
-#include <qobject.h>
-#include <qspinbox.h>
-#include <qvalueaxis.h>
+#include <qabstractbarseries.h>
+#include <qbarset.h>
 #include <ranges>
 #include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 #include <variant>
+#include <concepts>
 
 #include "utils.hpp"
 
 struct Size {
   uint width;
   uint height;
+};
+
+
+// we make all of these type trait structs to be able to be able to compare if two functions hold the same signatures
+// we cannot use std::same_as<f1, f2> since it does not support implicit conversions from std::funtcion or lambda
+// and std::convertible_to converts the function arguments as well which we do not want
+// so instead we do std::same_as on return type and arguments
+template <typename T>
+struct _callable_args;
+
+template <typename R, typename... Args>
+struct _callable_args<R(Args...)> {
+  using type = std::tuple<Args...>;
+};
+
+template <typename R, typename... Args>
+struct _callable_args<std::function<R(Args...)>> {
+  using type = std::tuple<Args...>;
+};
+
+template <typename T, typename R, typename... Args>
+struct _callable_args<R(T::*)(Args...)> {
+  using type = std::tuple<Args...>;
+};
+
+template <typename T> requires requires { &T::operator(); }
+struct _callable_args<T> : _callable_args<decltype(&T::operator())> {};
+
+template <typename T, typename R, typename... Args>
+struct _callable_args<R(T::*)(Args...) const> {
+  using type = std::tuple<Args...>;
+}; 
+
+template <typename F1, typename F2>
+struct IsSameSignature {
+  using t1 = _callable_args<F1>::type;
+  using t2 = _callable_args<F2>::type;
+  static constexpr auto value = std::same_as<t1, t2>;
 };
 
 template <typename T, typename... Deps>
@@ -193,7 +225,7 @@ public:
   FunctionOverload(T&& t) {
     constexpr auto idx = []<std::size_t... Is>(std::index_sequence<Is...>) {
       std::size_t result = sizeof...(Overloads);
-      ((std::convertible_to<std::decay_t<T>, Overloads> ? (result = std::min(result, Is), true) : false) || ...);
+      ((IsSameSignature<std::decay_t<T>, Overloads>::value ? (result = std::min(result, Is), true) : false) || ...);
       return result;
     }(std::index_sequence_for<Overloads...>{});
     
@@ -220,7 +252,11 @@ public:
 
   template <typename T>
   auto get(this auto&& self) {
-    assert(self.index == _index_of<T>() && "Type passed to get<T> is invalid");
+    if (self.index != _index_of<T>()) {
+      std::cerr << "FunctionOverload::get mismatch: stored index=" << self.index 
+                << ", requested index=" << _index_of<T>() << "\n";
+      std::abort();
+    }
     return *std::launder(reinterpret_cast<T*>(const_cast<std::byte*>(self.storage.data)));
   }
 };
@@ -440,16 +476,17 @@ private:
 struct Input: public Widget<Input> {
 
   using OptionalListenerOverloads = std::optional<FunctionOverload<
-  std::function<void(f64)>,
   std::function<void(u64)>,
+  std::function<void(f64)>,
   std::function<void(std::string)>
   >>;
 
-  enum class ValueType {
+  enum ValueType {
     U64,
     F64,
     String
   };
+
   constexpr Input(
     ValueType type = ValueType::U64,
     std::optional<std::string> placeholder = {},
@@ -459,13 +496,6 @@ struct Input: public Widget<Input> {
     m_default_value(default_value)
   {}
 
-
-  template <typename Func>
-  constexpr auto valueChanged(this auto&& self, Func listener)
-  {
-    self.m_value_changed = listener;
-    return self;
-  }
   auto create_widget(QWidget* parent, QBoxLayout* layout) -> QWidget*
   {
     QWidget* widget;
@@ -476,20 +506,22 @@ struct Input: public Widget<Input> {
       case ValueType::U64:
         uint_widget = new QSpinBox(parent); //TODO: find a fix for int -> u64 range conversion
         uint_widget->setValue(std::get<u64>(m_default_value.value_or(u64{})));
+        uint_widget->setRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
         widget = uint_widget;
         ::QObject::connect(
           uint_widget,
           qOverload<int>(&QSpinBox::valueChanged),
-          [value_changed = m_value_changed](u64 val) {
+          [value_changed = m_value_changed](int val) {
             if (not value_changed.has_value()) return;
             auto listener = value_changed.value().get<std::function<void(u64)>>();
-            listener(val);
+            listener(u64(val));
           }
         );
         break;
       case ValueType::F64:
         float_widget = new QDoubleSpinBox(parent);
         float_widget->setValue(std::get<f64>(m_default_value.value_or(f64{})));
+        float_widget->setRange(std::numeric_limits<f64>::min(), std::numeric_limits<f64>::max());
         widget = float_widget;
         ::QObject::connect(
           float_widget,
@@ -517,6 +549,20 @@ struct Input: public Widget<Input> {
     layout->addWidget(widget);
     return widget;
   }
+
+  template <typename Func>
+  constexpr auto valueChanged(this auto&& self, Func listener)
+  {
+    self.m_value_changed = listener;
+    return self;
+  }
+
+  auto withDefaultValue(this auto&& self, std::variant<f64, u64, std::string> value)
+  {
+    self.m_default_value = value;
+    return self;
+  }
+
 private:
   std::variant<f64, u64, std::string> m_value;
   std::optional<std::string> m_placeholder;
@@ -567,19 +613,36 @@ private:
   std::optional<std::function<void(std::string)>> m_value_changed;
 };
 
-struct LineSeries : public Widget<LineSeries> {
-
+struct Chart {
   struct Axis {
     std::string name;
     std::pair<f64, f64> range;
     std::optional<std::string> format;
   };
+  using AxisRef = Ref<ReactiveState<Axis>>;
 
+  auto withYAxis(this auto&& self, AxisRef axis)
+  {
+    self.m_y_axis = axis;
+    return self;
+  }
+
+  auto withXAxis(this auto&& self, AxisRef axis)
+  {
+    self.m_x_axis = axis;
+    return self;
+  }
+  
+protected:
+  std::optional<AxisRef> m_x_axis;
+  std::optional<AxisRef> m_y_axis;
+};
+
+struct LineChart : public Chart, Widget<LineChart> {
   using Series = std::vector<std::vector<std::pair<f64, f64>>>;
-  using SeriesRef = std::reference_wrapper<ReactiveState<Series>>;
-  using AxisRef = std::reference_wrapper<ReactiveState<Axis>>;
+  using SeriesRef = Ref<ReactiveState<Series>>;
 
-  LineSeries() {}
+  LineChart() = default;
   auto create_widget(QWidget* parent, QBoxLayout* layout) -> QWidget*
   {
     auto* widget = new QtCharts::QChartView();
@@ -613,58 +676,102 @@ struct LineSeries : public Widget<LineSeries> {
     QtCharts::QValueAxis* x_axis = create_axis(m_x_axis, Qt::AlignBottom);
     QtCharts::QValueAxis* y_axis = create_axis(m_y_axis, Qt::AlignLeft);
 
-    if (m_series) {
-      auto handle_series_change = [this, chart, x_axis, y_axis, to_qpoints](const auto& val){
-        chart->removeAllSeries();
-        auto series = val                        |
-          std::views::transform(to_qpoints) |
-          std::ranges::to<std::vector>();
+    auto handle_series_change = [this, chart, x_axis, y_axis, to_qpoints](const auto& val){
+      chart->removeAllSeries();
+      auto series = val                        |
+        std::views::transform(to_qpoints) |
+        std::ranges::to<std::vector>();
 
-        QColor color("#3b82f6");
-        color.setAlpha(120);
-        QPen pen(color); // TODO: abstract it away
-        pen.setWidth(2);
+      QColor color("#3b82f6");
+      color.setAlpha(120);
+      QPen pen(color); // TODO: abstract it away
+      pen.setWidth(2);
 
-        for (auto serie : series) {
-          auto* line_series = new QtCharts::QLineSeries();
-          line_series->setPen(pen);
-          line_series->append(serie);
-          chart->addSeries(line_series);
-          if (x_axis) line_series->attachAxis(x_axis);
-          if (y_axis) line_series->attachAxis(y_axis);
-        }
-      };
-      m_series.value().get().subscribe(handle_series_change);
-      handle_series_change(m_series.value().get().val); // initialize
-    }
+      for (auto serie : series) {
+        auto* line_series = new QtCharts::QLineSeries();
+        line_series->setPen(pen);
+        line_series->append(serie);
+        chart->addSeries(line_series);
+        if (x_axis) line_series->attachAxis(x_axis);
+        if (y_axis) line_series->attachAxis(y_axis);
+      }
+    };
 
+    chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
+
+    m_series.and_then([handle_series_change](const auto& val) -> std::optional<bool> { //stub
+      val.get().subscribe(handle_series_change);
+      handle_series_change(val.get().val); // initialize
+      return {};
+    });
+    widget->setChart(chart);
+    layout->addWidget(widget);
+    m_widget_ptr = widget;
+    return widget;
+  }
+  
+  auto withLines(this LineChart&& self, SeriesRef state)
+  { self.m_series = state;
+    return self;
+  }
+
+private:
+  std::optional<SeriesRef> m_series;
+  QtCharts::QChartView* m_widget_ptr;
+};
+
+struct BarChart : public Widget<BarChart>, Chart {
+
+  struct Bar {
+    std::string name;
+    f64 val;
+  };
+  using BarSet = std::vector<Bar>;
+
+  using Bars = std::vector<BarSet>; // vector of values
+  using BarsRef = Ref<ReactiveState<Bars>>;
+  using AxisRef = Ref<ReactiveState<Axis>>;
+
+  BarChart() {}
+  auto create_widget(QWidget* parent, QBoxLayout* layout) -> QWidget*
+  {
+    auto* widget = new QtCharts::QChartView();
+    auto* chart = new QtCharts::QChart();
+
+    auto handle_bars_changed = [this, chart](const Bars& values){
+      chart->removeAllSeries();
+      auto bar_series = new QtCharts::QBarSeries(chart);
+      QList<QtCharts::QBarSet*> sets;
+      std::ranges::for_each(values, [&](const auto& bars){
+        for(const auto& bar : bars) sets << new QtCharts::QBarSet(QString::fromStdString(bar.name));
+      });
+      std::ranges::for_each(values, [&](const auto& bars){
+        for(usz i{0}; i < bars.size(); i++) *sets[i] << bars[i].val;
+      });
+      bar_series->append(sets);
+      chart->addSeries(bar_series);
+    };
+
+    m_bars.and_then([handle_bars_changed](const auto& val) -> std::optional<bool> { //stub
+      val.get().subscribe(handle_bars_changed);
+      handle_bars_changed(val.get().val); // initialize
+      return {};
+    });
+
+    chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
     widget->setChart(chart);
     layout->addWidget(widget);
     m_widget_ptr = widget;
     return widget;
   }
 
-  auto withYAxis(this LineSeries&& self, AxisRef axis)
+  auto withBarSets(this BarChart&& self, BarsRef state)
   {
-    self.m_y_axis = axis;
-    return self;
-  }
-
-  auto withXAxis(this LineSeries&& self, AxisRef axis)
-  {
-    self.m_x_axis = axis;
-    return self;
-  }
-  
-  auto addManySeries(this LineSeries&& self, SeriesRef state)
-  {
-    self.m_series = state;
+    self.m_bars = state;
     return self;
   }
 
 private:
-  std::optional<SeriesRef> m_series;
-  std::optional<AxisRef> m_x_axis;
-  std::optional<AxisRef> m_y_axis;
+  std::optional<BarsRef> m_bars;
   QtCharts::QChartView* m_widget_ptr;
 };
